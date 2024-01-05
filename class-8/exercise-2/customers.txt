@@ -1,0 +1,3 @@
+cliente_1
+cliente_2
+cliente_3
