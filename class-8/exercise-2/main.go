@@ -29,7 +29,7 @@ func main() {
 	if err != nil {
 		panic("The file could not be read")
 	}
-	
+
 	data := string(bytes)
 	fmt.Println(data)
 }
