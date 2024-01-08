@@ -7,12 +7,11 @@ import (
 	"strings"
 )
 
-type Ticket struct {
-}
-
+// CountryCountMap map with the countries count
 var CountryCountMap = make(map[string]int)
 var totalTickets = 0
 
+// constants for the allowed periods.
 const (
 	dawn      = "DAWN"
 	morning   = "MORNING"
@@ -20,6 +19,7 @@ const (
 	night     = "NIGHT"
 )
 
+// PeriodCountMap map with the periods count
 var PeriodCountMap = map[string]int{
 	dawn:      0,
 	morning:   0,
@@ -27,7 +27,7 @@ var PeriodCountMap = map[string]int{
 	night:     0,
 }
 
-// ejemplo 1
+// GetTotalTickets this function get the count of the tickets sold for a country from the map CountryCountMap.
 func GetTotalTickets(country string) (int, error) {
 	count, ok := CountryCountMap[country]
 	if !ok {
@@ -37,7 +37,7 @@ func GetTotalTickets(country string) (int, error) {
 	return count, nil
 }
 
-// ejemplo 2
+// GetCountByPeriod return the amount of tickets sold for a specific period of time.
 func GetCountByPeriod(time string) (int, error) {
 	period, err := getPeriod(time)
 	if err != nil {
@@ -52,7 +52,7 @@ func GetCountByPeriod(time string) (int, error) {
 	return count, nil
 }
 
-// ejemplo 3
+// AverageDestination returns the percentage of flights that belongs to a specific country (destination).
 func AverageDestination(destination string) (float64, error) {
 	count, err := GetTotalTickets(destination)
 
@@ -63,6 +63,7 @@ func AverageDestination(destination string) (float64, error) {
 	return float64(count) / float64(totalTickets) * 100, nil
 }
 
+// ProcessRow process the information of csv's row. It updates the countries and period counts.
 func ProcessRow(row []string) error {
 	updateCountries(row[3])
 	err := updatePeriodMap(row[4])
@@ -85,6 +86,7 @@ func updateCountries(country string) {
 	}
 }
 
+// updatePeriodMap update the period map and increase the count of the period
 func updatePeriodMap(time string) error {
 	time, err := getPeriod(time)
 	if err != nil {
@@ -100,6 +102,7 @@ func updatePeriodMap(time string) error {
 	return nil
 }
 
+// getPeriod returns a string with the period of a time specified in a string with format "H:mm"
 func getPeriod(time string) (string, error) {
 	hour := strings.Split(time, ":")[0]
 	var period string

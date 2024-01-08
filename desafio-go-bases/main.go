@@ -40,5 +40,4 @@ func main() {
 	fmt.Println("Dawn total tickets:", count)
 	percentage, err := tickets.AverageDestination("Argentina")
 	fmt.Printf("Brazil tickets percentage: %.2f%%\n", percentage)
-
 }
