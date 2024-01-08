@@ -109,6 +109,7 @@ func getPeriod(time string) (string, error) {
 
 	intHour, err := strconv.Atoi(hour)
 	if err != nil {
+		err := fmt.Errorf("invalid hour format: %s", time)
 		return "", err
 	}
 
