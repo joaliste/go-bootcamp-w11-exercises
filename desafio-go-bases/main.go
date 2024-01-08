@@ -13,8 +13,7 @@ func main() {
 	file, err := os.Open("tickets.csv")
 
 	if err != nil {
-		fmt.Errorf("Error while reading the file", err)
-		return
+		panic("File can not be read")
 	}
 
 	defer file.Close()
@@ -28,14 +27,18 @@ func main() {
 		if err != nil {
 			log.Fatal(err)
 		}
-		tickets.ProcessRow(row)
+		err = tickets.ProcessRow(row)
+
+		if err != nil {
+			panic("an error occurred while processing a row")
+		}
 	}
 
-	total, err := tickets.GetTotalTickets("Brazil")
+	total, err := tickets.GetTotalTickets("Argentina")
 	fmt.Println("Brazil total tickets:", total)
 	count, err := tickets.GetCountByPeriod("9:12")
 	fmt.Println("Dawn total tickets:", count)
-	percentage, err := tickets.AverageDestination("Brazil")
+	percentage, err := tickets.AverageDestination("Argentina")
 	fmt.Printf("Brazil tickets percentage: %.2f%%\n", percentage)
 
 }

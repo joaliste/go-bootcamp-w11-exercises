@@ -2,6 +2,7 @@ package tickets
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 )
@@ -38,7 +39,11 @@ func GetTotalTickets(country string) (int, error) {
 
 // ejemplo 2
 func GetCountByPeriod(time string) (int, error) {
-	period := getPeriod(time)
+	period, err := getPeriod(time)
+	if err != nil {
+		return 0, err
+	}
+
 	count, ok := PeriodCountMap[period]
 	if !ok {
 		return 0, errors.New("period does not exist")
@@ -58,10 +63,16 @@ func AverageDestination(destination string) (float64, error) {
 	return float64(count) / float64(totalTickets) * 100, nil
 }
 
-func ProcessRow(row []string) {
+func ProcessRow(row []string) error {
 	updateCountries(row[3])
-	updatePeriodMap(row[4])
+	err := updatePeriodMap(row[4])
+	if err != nil {
+		return err
+	}
+
 	totalTickets++
+
+	return nil
 }
 
 // updateCountries update the country map and increase the count of the country
@@ -74,23 +85,28 @@ func updateCountries(country string) {
 	}
 }
 
-func updatePeriodMap(time string) {
-	time = getPeriod(time)
+func updatePeriodMap(time string) error {
+	time, err := getPeriod(time)
+	if err != nil {
+		return err
+	}
 	_, ok := PeriodCountMap[time]
 
 	if !ok {
-		panic("invalid time")
+		return errors.New("time period not found in map")
 	}
 	PeriodCountMap[time] += 1
+
+	return nil
 }
 
-func getPeriod(time string) string {
+func getPeriod(time string) (string, error) {
 	hour := strings.Split(time, ":")[0]
 	var period string
 
 	intHour, err := strconv.Atoi(hour)
 	if err != nil {
-		panic(err)
+		return "", err
 	}
 
 	if intHour >= 0 && intHour <= 6 {
@@ -101,7 +117,10 @@ func getPeriod(time string) string {
 		period = afternoon
 	} else if intHour >= 20 && intHour <= 23 {
 		period = night
+	} else {
+		err := fmt.Errorf("invalid hour value: %d", intHour)
+		return "", err
 	}
 
-	return period
+	return period, nil
 }
