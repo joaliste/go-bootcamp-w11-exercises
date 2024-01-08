@@ -56,3 +56,18 @@ func TestGetPeriod_invalidTime(t *testing.T) {
 
 	require.Errorf(t, err, "invalid hour format: 2222")
 }
+
+func TestAverageDestination_brazilAverageDestination(t *testing.T) {
+	firstCountry := "Brazil"
+	secondCountry := "Santiago"
+	firstCountryCount := 10
+	secondCountryCount := 5
+	totalTickets = firstCountryCount + secondCountryCount
+
+	CountryCountMap[firstCountry] = firstCountryCount
+	CountryCountMap[secondCountry] = secondCountryCount
+
+	expected := float64(firstCountryCount) / float64(totalTickets) * 100
+	result, _ := AverageDestination("Brazil")
+	require.Equal(t, expected, result)
+}
