@@ -24,3 +24,11 @@ func TestGetTotalTickets_Santiago(t *testing.T) {
 
 	require.Equal(t, expected, result)
 }
+
+func TestGetTotalTickets_CountryNotFound(t *testing.T) {
+	country := "Italy"
+
+	_, err := GetTotalTickets(country)
+
+	require.Errorf(t, err, "country does not exist")
+}
